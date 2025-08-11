@@ -1,0 +1,14 @@
+Name	-LastHr	-Outlie	Min	Max	+Outlie	+LastHr	Comments
+Example	X	13.5	13.9	14.1	14.5	20	Acceptable values, inclusive
+InBuckt	X	X	X	0	X	0	#1
+TOffset	117	118	119	121	122	123	#2
+Energy	1	1	1	99	99	99	#3
+Density	X	X	X	X	X	X	#4
+Flow	X	X	X	X	X	X	#5
+Intens	1	1	2	100	110	110	#6
+Unknown	X	X	X	X	X	X	#7
+OI	X	X	X	X	X	X	#8
+Stabil	X	X	X	4.5	4.5	4.7	#9
+FoundryPumpStatus	X	X	X	X	X	X	#10
+DecOdds	2.2						
+INFO	BGCM177	2022-10-18 10:07:00	2022-10-18-10:07:00

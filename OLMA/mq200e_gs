@@ -1,0 +1,11 @@
+#!/bin/bash
+
+cd /OLMA
+
+while (true); do
+	mx-uart-ctl -p 0 -m 2
+	echo getspec,`date` >> /OLMA/startup.log
+	/OLMA/getspec --conf_file=/OLMA/getspec.conf
+	sleep 60
+done
+

@@ -1,0 +1,12 @@
+[Unit]
+Description=BCS tunnel2 monitor
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/NetworkMonitor.sh
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

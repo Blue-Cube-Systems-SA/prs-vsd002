@@ -1,0 +1,17 @@
+# version 1.0.1
+[Unit]
+Description=BCS mqsembed
+
+Wants=network.target
+After=syslog.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=/OLMA/mqse
+Restart=on-failure
+RestartSec=10
+KillMode=process
+#wait 10 seconds so that port initializtion can execute correctly
+ExecStartPre=/bin/sleep 10 
+[Install]
+WantedBy=multi-user.target

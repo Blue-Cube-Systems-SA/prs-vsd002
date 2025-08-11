@@ -1,0 +1,43 @@
+2024-04-12T11:43+0200 10.0.2.15 regan  first release
+2024-06-30T19:34+0200 192.168.10.85 will  Update crontab
+2024-07-01T16:23+0200 10.0.2.15 regan  Rollback modbus to v1.2.1
+2024-07-03T14:44+0200 10.0.2.15 regan  Update mq200embed to v5.1.10-arm and its mq200.conf
+2024-07-03T15:53+0200 192.168.10.85 will  Fix NaN Luxcomp file
+2024-07-03T18:40+0200 192.168.10.85 will  Increase MeanDifferenceThreshold from 100 to 200. Put Valid diff and filter values back to normal.
+2024-07-19T00:43+0200 192.168.10.85 will  First calibration download
+2024-07-20T02:24+0200 192.168.10.85 will  Swap graincounts Zn and Solids, increase dark diffs
+2024-07-20T02:51+0200 192.168.10.85 will  Calibration incl Zn
+2024-07-21T23:02+0200 192.168.10.85 will  Updated calibration with fixed dark scans
+2024-07-23T20:56+0200 192.168.10.85 will  Correct sample times in crontab
+2024-07-27T02:28+0200 192.168.10.85 will  Calibration update
+2024-07-30T10:45+0200 10.0.2.15 regan  Restart modbus every 30 minutes to hopefully remove the *** from the screen
+2024-08-01T01:00+0200 192.168.10.85 will  Calibration update
+2024-08-01T17:06+0200 192.168.10.85 will  Update to Pb calibrations
+2024-08-06T16:18+0200 10.0.2.15 jandre  Updated watchdog.sh to V1.0.2-arm
+2024-08-08T10:31+0200 10.0.2.15 jandre  Updated Watchdog.sh regarding the reboot after faulty dark luxcomp
+2024-08-13T02:49+0200 192.168.10.85 will  Calibration update
+2024-08-23T22:47+0200 192.168.10.85 will  Calibration updates
+2024-08-26T04:57+0200 192.168.10.85 will  Reinstating previous day luxcomp (luxcomp faults)
+2024-08-30T01:20+0200 192.168.10.85 will  Calibration update
+2024-09-05T18:45+0200 192.168.10.85 will  Change to training and MapMat to get Solids to work
+2024-09-05T23:50+0200 192.168.10.85 will  Fix OI <-> Unknown in MapMat
+2024-09-10T10:18+0200 192.168.10.111 will  Added latestet logdak ,sendak , createTrendFile
+2024-09-19T23:43+0200 192.168.10.85 will  Calibration update and solids added
+2024-09-23T17:42+0200 192.168.10.85 will  Change calibration
+2024-09-23T18:15+0200 192.168.10.85 will  Changing calibration to 20240918
+2024-09-27T17:40+0200 192.168.10.85 will  Activate 2nd sampler
+2024-09-27T17:47+0200 192.168.10.85 will  Reduce UpdateLuxcompIgnore from 3 to 1
+2024-09-30T19:01+0200 192.168.10.85 will  Change composite to 45min schedule
+2024-10-01T16:36+0200 192.168.10.85 will  Restoring yesterday's luxcomp
+2024-10-10T21:52+0200 192.168.10.85 will  Swap luxcomp with version from 30th Sept
+2024-10-11T01:25+0200 192.168.10.85 will  Restoring today's luxcomp
+2025-05-26T17:46+0200 192.168.10.85 will  Setup crontab for hourly luxcomp and slurry test scans
+2025-05-26T21:10+0200 192.168.10.85 will  Stop overwriting luxcomp daks - remove scan cleaning
+2025-05-27T18:55+0200 192.168.10.85 will  Adjust "slurry" scan integration time to similar intensity level as luxcomp
+2025-05-27T22:10+0200 192.168.10.85 will  Increase luxcomp stabilisation wait count
+2025-05-28T01:03+0200 192.168.10.85 will  Extend Luxcompstabilisation wait count even more
+2025-05-28T04:10+0200 192.168.10.85 will  Extend luxcomp stabilisation wait count further to 5 (scans still showing "slurry")
+2025-08-05T15:34+0200 10.0.2.15 Kudzai  releasing the production as is to the temporary moxa
+2025-08-05T16:14+0200 10.0.2.15 Kudzai  mqsembed v5.2.7-arm , Watchdog.sh v2.1.2-arm, vsd_read_plc.sh, vsd_sync_flags.sh
+2025-08-06T09:49+0200 10.0.2.15 Kudzai  mqsembed v5.2.7-armtest
+2025-08-06T10:28+0200 10.0.2.15 Kudzai  mqsembed v5.2.7-arm vsd & vsd scripts

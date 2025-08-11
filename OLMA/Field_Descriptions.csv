@@ -1,0 +1,70 @@
+DBField	Description
+
+ [Control]	
+Energy	Energy
+
+ [Sensors]	
+Offs_0	T-Offset A
+Offs_1	T-Offset B
+Off_Emu	T-Offset Sim
+Temp_C	Temperature [degC]
+TempRaw	Temperature [raw]
+Pressur	Pressure [kPa]
+Humid	Relative Humidity [%]
+Flag_V	Flag Voltage [V*10]
+Board_V	PCB Version [V*10]
+
+ [Pumpstates]	
+PS0	PS0
+PS1	PS1
+PS2	PS2
+PS3	PS3
+PS4	PS4
+PS5	PS5
+PS6	PS6
+PS7	PS7
+PS8	PS8
+PS9	PS9
+PS10	PS10
+PS11	PS11
+PS12	PS12
+PS13	PS13
+PS14	PS14
+PS15	PS15
+
+ [Profibus read]	
+Flow	Flow
+Density	Density
+METPumpStatus	METPumpStatus
+METOreType	METOreType
+Blank1	Blank1
+Blank2	Blank2
+Blank3	Blank3
+Blank4	Blank4
+FoundryPumpStatus	FoundryPumpStatus
+FoundryOreType	FoundryOreType
+
+ [Bucket-Robot]	
+B_R	Bucket-Robot results
+
+ [Spectrum]	(Not used from here. Must be as below in MapMat.csv files)
+OI	OI
+Unknown	Unknown
+TOffset	T-Offset
+Intens	Intensity
+Light_I	Light-Int
+Dark_I	Dark-Int
+Stabil	Stability
+
+ [Minerals]	(Not used from here.  Read from training.conf files)
+Min1	
+Min2	
+Min3	
+Min4	
+Min5	
+Min6	
+Min7	
+Min8	
+ 
+ [Status Byte]
+Status-Byte	Status-Byte

@@ -1,0 +1,16 @@
+[Unit]
+Description=BCS modbus
+
+Wants=network.target
+After=syslog.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=/OLMA/modbus --conf_file=/OLMA/modbus.conf
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
+

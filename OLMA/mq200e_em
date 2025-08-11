@@ -1,0 +1,14 @@
+#!/bin/bash
+
+VERSION="1.0.0"
+
+cd /OLMA/
+
+while (true); do
+#  echo Calcaverages.sh, `date` >> /OLMA/startup.log
+#	scripts/Calcaverages.sh &
+	touch /OLMA/input/sample.sem
+	echo mq200embed,`date` >> /OLMA/startup.log
+	/OLMA/mq200embed | /OLMA/sampleDetector
+	sleep 60
+done

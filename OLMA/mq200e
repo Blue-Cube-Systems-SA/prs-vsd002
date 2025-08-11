@@ -1,0 +1,13 @@
+#!/bin/bash
+
+cd /OLMA
+
+while (true); do
+	sleep 30
+	./mq200e_gs &
+        #sleep 30
+	#./mq200e_ht &
+	sleep 30
+        ./mq200e_em 
+done
+

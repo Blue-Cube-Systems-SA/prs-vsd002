@@ -1,0 +1,16 @@
+[Unit]
+Description=BCS getspec
+
+Wants=network.target
+After=syslog.target network-online.target
+
+[Service]
+Type=simple
+#ExecStart=/OLMA/getspec --conf_file=/OLMA/getspec.conf
+ExecStart=/OLMA/mq200e_gs
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

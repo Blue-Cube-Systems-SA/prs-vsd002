@@ -1,0 +1,9 @@
+#!/bin/bash
+
+cd /OLMA
+
+while (true); do
+        echo heater,`date` >> /OLMA/startup.log
+	/OLMA/heater --conf_file=/OLMA/heater.conf
+	sleep 60
+done

@@ -1,0 +1,15 @@
+[Unit]
+Description=BCS heater
+
+Wants=network.target
+After=syslog.target network-online.target
+
+[Service]
+Type=simple
+ExecStart=/OLMA/mq200e_ht
+Restart=on-failure
+RestartSec=10
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target

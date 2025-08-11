@@ -1,0 +1,50 @@
+# /etc/crontab: system-wide crontab
+# Unlike any other crontab you don't have to run the `crontab'
+# command to install the new version when you edit this file
+# and files in /etc/cron.d. These files also have username fields,
+# that none of the other crontabs do.
+
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+
+# m h dom mon dow user	command
+17 *	* * *	root    cd / && run-parts --report /etc/cron.hourly
+25 6	* * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.daily )
+47 6	* * 7	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.weekly )
+52 6	1 * *	root	test -x /usr/sbin/anacron || ( cd / && run-parts --report /etc/cron.monthly )
+#
+
+# For comms gateway only
+  0    2    1     *      *   root  /usr/local/bin/sync_time.sh		# Sync the time of the machine once every month
+ */5  *    *     *      *   root  /usr/local/bin/logdak.sh
+ */5  *    *     *      *   root  /usr/local/bin/send_data.sh	 # Create daily.csv for stats in Webtrends	   
+ */15 *    *     *      *   root  /usr/local/bin/senddak.sh       
+ */12 *    *     *      *   root  /usr/local/bin/updatetrend.sh   
+
+# For anybus
+  *   *    *     *      *   root  /usr/local/bin/scadasample.sh    
+
+# For all MQis
+  *     *     *     *     *     root  /usr/local/bin/tosendline.sh
+ */5    *     *     *     *     root  /usr/local/bin/createTrendFile.sh
+ */5    *     *     *     *     root  /usr/local/bin/fetchDBData.sh
+  5     3     *     *     1-6   root  touch /OLMA/input/doluxlight.flag
+  5     3     *     *      7    root  touch /OLMA/input/doluxdark.flag
+  *     *     *     *      *    root  /OLMA/watchdog.sh  # Activate once unit is fully set up
+ */2    *     *     *      *    root  /usr/local/bin/checkbin.sh
+ */2    *     *     *      *    root  /usr/local/bin/checkmem.sh
+ */5    *     *     *      *    root  /usr/local/bin/check_frozen_spec.sh
+  0     9     *     *      *    root  /usr/local/bin/clean_storage.sh
+  0   6,12    *     *      *    root touch /OLMA/input/red.flag                                # Daily slurry scans for pycal checks
+  */30  *     *     *      *    root  systemctl restart modbus
+
+# Sample optimizer
+#  */5  0-9    *    *    *    root  /OLMA/scripts/bucket_robot.sh 'Today 09:00'		# So that the sample is ready by today at 10:00
+#  */5  13-23  *    *    *    root  /OLMA/scripts/bucket_robot.sh 'Tomorrow 09:00'	# So that the sample is ready by tomorrow at 10:00
+#   0   10     *    *    *    root  /OLMA/scripts/bucket_removed.sh			# Prevent any samples from being taken after 10:00
+#   0   13     *    *    *    root  /OLMA/scripts/bucket_replaced.sh			# Allow samples to be taken from 13:00
+
+# for VSD
+  *   *    *     *      *   root  /usr/local/bin/vsd_read_plc.sh
+  *   *    *     *      *   root  /usr/local/bin/vsd_sync_flags.sh  
+

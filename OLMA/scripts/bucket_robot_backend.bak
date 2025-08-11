@@ -1,0 +1,126 @@
+#!/bin/bash
+VERSION=1.0.1
+# Usage: ./bucket_robot.sh  Window  Base_OLMA_directory
+# Reads current process variables from trend file and limits from conf file.
+# Determines when process is within limits and the bucket both ready and empty.
+# Calculates the odds acording to the remaining minutes in the 'normal sample window'.
+# Odds of execution increases as the available time window gets smaller.
+# If the 'normal sample window' is zero or negative, the odds of execution will be 100%.
+BTOSEND_SCRIPT=/usr/local/bin/trendline.sh
+BCONF=conf/bucket_conf.csv
+BFLAGDIR=input
+BTAKESAMPLE_SCRIPT=scripts/green.sh
+BOUTPUTFILE=data/bucket_robot.out
+
+#Other files that may need attention:
+#  /etc/crontab, /usr/local/bin/trendline.sh,  /bin/awk soft link, /bin/gawk
+#  /OLMA/Field_Descriptions.csv, /OLMA/conf/bucket_conf.csv, /OLMA/scripts/bucket_*.sh
+#=====================================================================================
+
+WINDOW=$1
+OLMA=$2
+TOSEND_SCRIPT="$BTOSEND_SCRIPT $OLMA/"
+CONF=$OLMA/$BCONF
+FLAGDIR=$OLMA/$BFLAGDIR
+TAKESAMPLE_SCRIPT=$OLMA/$BTAKESAMPLE_SCRIPT
+TAKESAMPLEBIT_FLAG=/OLMA/input/autoSampleBit.flag
+OUTPUTFILE=$OLMA/$BOUTPUTFILE
+BATTEMPTSAMPLEFILE=/OLMA/data/bucket_beginSampleTime # This file contains the time to begin attempting to sample
+echo $OLMA
+echo '============'
+#echo 'WINDOW, TOSEND_SCRIPT, CONF, FLAGDIR, TAKESAMPLE_SCRIPT, OUTPUTFILE'
+#echo "$WINDOW, $TOSEND_SCRIPT, $CONF, $FLAGDIR, $TAKESAMPLE_SCRIPT, $OUTPUTFILE"
+
+if [[ ! -f $OUTPUTFILE ]]; then echo ' ' >$OUTPUTFILE; fi
+read NAM MI1 MI2 MI3 MA3 MA2 MA1 DUM <<<$(grep "^ *InBuckt"[' ',$'\t'] $CONF |tail -n1)
+#Name -LastHr -Outlie Min Max +Outlie +LastHr Comments
+if [[ -f $FLAGDIR/bucket_present.flag ]]
+then
+    if [[ -f $FLAGDIR/bucket_samples.num ]]
+    then
+        read InBuckt <$FLAGDIR/bucket_samples.num
+        if [[ $InBuckt = '' ]]; then InBuckt=1; fi
+        if [[ $WINDOW -le 0 ]] # During "last hour"
+        then
+            if   [[ $MI1 != X && $MI1 != x &&  $InBuckt -lt $MI1 ]]
+            then RESULT='_' #Bucket too empty (for completeness only)
+            elif [[ $MA1 != X && $MA1 != x &&  $InBuckt -gt $MA1 ]]
+            then RESULT='[' #Bucket too full
+            else RESULT='|' #Bucket ready for sample
+            fi
+        else                   # During normal hours
+            if   [[ $MI3 != X && $MI3 != x &&  $InBuckt -lt $MI3 ]]
+            then RESULT='_' #Bucket too empty (for completeness only)
+            elif [[ $MA3 != X && $MA3 != x &&  $InBuckt -gt $MA3 ]]
+            then RESULT='[' #Bucket too full
+            else RESULT='|' #Bucket ready for sample
+            fi
+        fi
+    else
+        InBuckt=0
+        RESULT='|' #Bucket ready and empty
+    fi
+else
+    InBuckt=-1
+    RESULT='X' #Bucket not ready
+fi
+echo $InBuckt $NAM $MI1 $MI2 $MI3 $MA3 $MA2 $MA1 $DUM
+
+CHECKS=(TOffset Energy Density Flow Intens Unknown OI Stabil)
+#read    TOffset Energy Density Flow Intens Unknown OI Stabil <<<\
+#  $($TOSEND_SCRIPT |awk -F, '{print $12, $17, $36, $35, $13, $16, $6, $11}')
+#  $(grep "^2[0-9]*\/[0-9]" $TOSENDFILE |tail -n1 |awk -F, '{print $12, $17, $36, $35, $13, $16, $6, $11}')
+#echo "$TOffset $Energy $Density $Flow $Intens $Unknown $OI $Stabil"
+
+for CHECK in ${CHECKS[*]}
+do
+    LIM=$(grep "^ *${CHECK}"[' ',$'\t'] $CONF |tail -n1) #Limits
+    let C=`$TOSEND_SCRIPT Fieldnames 2>/dev/null |sed -e "s/$CHECK.*//" |awk -F, '{print NF}'`
+    #echo $C
+    VAL=`$TOSEND_SCRIPT 2>/dev/null |cut -d, -f$C-$C |sed 's/ //g'`
+    if [[ "${VAL}" = "" ]]; then VAL=0; fi
+    #eval VAL=\$$CHECK #Current value. (Floating point comparisons requires awk. Not as clear as bash comparisons above)
+    HI=$(echo ${CHECK:0:1})
+    LO=$(echo $HI |tr 'A-Z' 'a-z')
+    echo $HI $LO $VAL $LIM
+    if [[ $WINDOW -le 0 ]] # During "last hour"
+    then
+        RESULT=$RESULT$(echo $LO $HI $VAL $LIM \
+          |awk '{ print ($5!="X" && $5!="x" && $3<$5) ? $1 : ($10!="X" && $10!="x" && $3>$10) ? $2 : "."}')
+        #  $3:VAL  $5:-LastHr  $10:+LastHr
+    else                   # During normal hours
+        RESULT=$RESULT$(echo $LO $HI $VAL $LIM \
+          |awk '{ print ($7!="X" && $7!="x" && $3<$7) ? $1 : ($8!="X" && $8!="x" && $3>$8) ? $2 : "."}')
+        #  $3:VAL  $7:Min  $8:Max
+    fi
+done
+
+if [ -f "$BATTEMPTSAMPLEFILE" ]
+then
+    beginTrying=$(<$BATTEMPTSAMPLEFILE);
+else
+    beginTrying=$(( $RANDOM % $WINDOW + 1 )) # Generate a random sample time if none is present
+    echo "$beginTrying" > $BATTEMPTSAMPLEFILE; # Store the random sample time in a file for this shift
+    echo $(( $WINDOW-$beginTrying )) minutes before trying to sample
+fi
+
+if [ $WINDOW -le $beginTrying ]
+then
+    RESULT=${RESULT}1
+else
+    RESULT=${RESULT}0
+fi
+
+echo $RESULT
+echo $RESULT >${OUTPUTFILE}.tmp; mv ${OUTPUTFILE}.tmp ${OUTPUTFILE}
+
+if [ $WINDOW -le $beginTrying ]
+then
+    if [[ $RESULT == '|........1' ]]
+    then
+        $TAKESAMPLE_SCRIPT
+        touch $TAKESAMPLEBIT_FLAG
+        echo 1 > $FLAGDIR/bucket_samples.num
+        echo `hostname`_`date +%Y%m%d`-`date +%H%M`.dak >> /OLMA/data/`hostname`_SampleOptimiser_Rx.txt
+    fi
+fi

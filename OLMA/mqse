@@ -1,0 +1,13 @@
+#!/bin/bash
+
+
+while (true); do
+	mx-uart-ctl -p 1 -m 1
+	cd /OLMA
+    echo mqsembed,`date` >> /OLMA/startup.log
+    #sleep 40
+    touch /OLMA/input/sample.sem
+    /OLMA/mqsembed 2>> /OLMA/data/profibusproblems.log
+    #sleep 60
+done
+

@@ -1,0 +1,16 @@
+# interfaces(5) file used by ifup(8) and ifdown(8)
+# Include files from /etc/network/interfaces.d:
+source-directory /etc/network/interfaces.d
+auto eth0 eth1 lo
+iface lo inet loopback
+iface eth0 inet static
+        address 192.168.3.110
+        network 192.168.3.0
+        netmask 255.255.0.0
+        broadcast 192.168.3.255
+	gateway 192.168.10.10
+iface eth1 inet static
+        address 192.168.4.127
+        network 192.168.4.0
+        netmask 255.255.255.0
+        broadcast 192.168.4.255
